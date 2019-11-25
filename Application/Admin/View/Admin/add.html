@@ -1,0 +1,41 @@
+<extend name="Public/base"/>
+<block name="title">管理员</block>
+<block name="location">管理员添加</block>
+<block name="content">
+  <form class="form-horizontal" action="" method="post">
+    <!--用户名-->
+    <div class="form-group">
+      <label for="adminuser" class="col-xs-12 col-sm-3 control-label no-padding-right">管理员账号</label>
+      <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input type="text" id="adminuser" class="width-100" name="adminuser">
+          <i class="ace-icon fa fa-leaf"></i>
+        </span>
+      </div>
+      <div class="help-block col-xs-12 col-sm-reset inline">
+        <span class="text-danger">*</span>
+        账户是必填
+      </div>
+    </div>
+    <!--密码-->
+    <div class="form-group">
+      <label for="adminpass" class="col-xs-12 col-sm-3 control-label no-padding-right">密码</label>
+      <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input type="text" id="adminpass" class="width-100" name="adminpass">
+          <i class="ace-icon fa fa-leaf"></i>
+        </span>
+      </div>
+      <div class="help-block col-xs-12 col-sm-reset inline">
+        <span class="text-danger">*</span>
+        <span>密码是必填项</span>
+      </div>
+    </div>
+    <!--提交-->
+    <div class="form-group text-center">
+      <button class="btn btn-info" type="submit" id="button">提交</button>
+      <a class="btn btn-warning" href="{:U('index')}">返回</a>
+    </div>
+  </form>
+</block>
+<block name="js"></block>

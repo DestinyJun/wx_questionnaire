@@ -1,0 +1,53 @@
+<extend name="Public/base"/>
+<block name="title">管理员</block>
+<block name="location">管理员列表</block>
+<block name="content">
+  <div class="row">
+    <div class="col-sm-4">
+      <a href="/Admin{:U('add')}" class="btn btn-sm btn-warning">管理员添加</a>
+    </div>
+  </div>
+  <table id="simple-table" class="table  table-bordered table-hover">
+    <thead>
+    <tr>
+      <th class="detail-col">#</th>
+      <th>管理员账号</th>
+      <th>创建时间</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <volist name="data" id="item" key="k">
+      <gt name="item.id" value="1">
+      <tr>
+        <td class="center">{$k-1}</td>
+        <td>{$item.adminuser}</td>
+        <td>{$item.addtime|date='Y-m-d H:i:s',###}</td>
+        <td>
+          <div class="hidden-sm hidden-xs btn-group">
+            <a class="btn btn-xs btn-info" href="/Admin/{:U('edit','id='.$item['id'])}" title="用户编辑">编辑</a>
+            <input type="button" class="btn btn-xs btn-danger" onclick="deleteItem('{$item.id}')" title="用户删除" value="删除"/>
+          </div>
+        </td>
+      </tr>
+      </gt>
+    </volist>
+    </tbody>
+  </table>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
+        {$page}
+      </div>
+    </div>
+  </div>
+</block>
+<block name="js">
+  <script>
+    function deleteItem(id) {
+      if (window.confirm('确定要删除吗？')) {
+        location.href = "/Admin/admin/del/id/"+id;
+      }
+    }
+  </script>
+</block>
