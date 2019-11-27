@@ -1,0 +1,56 @@
+<extend name="Public/base"/>
+<block name="title">用户管理</block>
+<block name="location">用户编辑</block>
+<block name="content">
+  <form class="form-horizontal" action="" method="post">
+    <!--用户名-->
+    <div class="form-group">
+      <label for="nikename" class="col-xs-12 col-sm-3 control-label no-padding-right">请输入新昵称</label>
+      <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input type="text" id="nikename" class="width-100" name="nikename" value="{$data.nikename}">
+          <i class="ace-icon fa fa-leaf"></i>
+        </span>
+      </div>
+      <div class="help-block col-xs-12 col-sm-reset inline">
+        <span class="text-danger">*</span>
+        昵称是必填
+      </div>
+    </div>
+    <!--密码-->
+    <div class="form-group">
+      <span class="col-xs-12 col-sm-3 control-label no-padding-right" style="padding-top: 0;">请选择性别</span>
+      <div class="col-xs-12 col-sm-5">
+        <label>
+          <input name="sex" type="radio" class="ace" value="男" <eq name="data.sex" value="男">checked</eq>>
+          <span class="lbl">男</span>
+        </label>
+        <label>
+          <input name="sex" type="radio" class="ace" value="女" <eq name="data.sex" value="女">checked</eq>>
+          <span class="lbl">女</span>
+        </label>
+      </div>
+    </div>
+    <!--用户名-->
+    <div class="form-group">
+      <label for="tel" class="col-xs-12 col-sm-3 control-label no-padding-right">请输入新电话</label>
+      <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input type="text" id="tel" class="width-100" name="tel" value="{$data.tel}">
+          <i class="ace-icon fa fa-leaf"></i>
+        </span>
+      </div>
+      <div class="help-block col-xs-12 col-sm-reset inline">
+        <span class="text-danger">*</span>
+        电话是必填
+      </div>
+    </div>
+    <!--提交-->
+    <div class="form-group text-center">
+      <input type="hidden" name="id" value="{$data.id}">
+      <button class="btn btn-info" type="submit" id="button">提交</button>
+      <a class="btn btn-warning" href="/Admin{:U('index')}">返回</a>
+    </div>
+  </form>
+</block>
+<block name="js"></block>
