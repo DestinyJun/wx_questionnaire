@@ -14,6 +14,7 @@ class UserModel extends CommonModel
 
   // 字段校验
   protected $_validate = array(
+    array('openid','','openid已经存在',0,'unique',3),
     array('nikename','require','昵称是必填项'),
     array('tel','require','电话是必填项'),
   );

@@ -53,17 +53,28 @@ class ReportController extends CommonController {
       $user_info = _I('user_info');
       $answer = _I('answer');
       $child = _I('child');
+
+      // $user_info校验
       Validator::make($user_info, [
         "openid" => "present|alpha_num",
         "nikename" => "present",
         'sex' => "in:男,女",
+        "tel" => "present|mobile",
       ]);
       if (Validator::has_fails()) {
         $this->ajaxReturn(array("status" =>'1001',"msg"=>Validator::error_msg()));
       }
-      if(!$answer) {
-        $this->ajaxReturn(array("status" =>'1001',"msg"=>'answer的值为空'));
+
+      // $answer校验
+      Validator::make($answer, [
+        "physique_type" => "present",
+        "physique_type_enable" => "present",
+      ]);
+      if (Validator::has_fails()) {
+        $this->ajaxReturn(array("status" =>'1001',"msg"=>Validator::error_msg()));
       }
+
+      // $child校验
       Validator::make($child, [
         "ptel" => "present|mobile",
         "name" => "present",
@@ -77,6 +88,11 @@ class ReportController extends CommonController {
       if (Validator::has_fails()) {
         $this->ajaxReturn(array("status" =>'1001',"msg"=>Validator::error_msg()));
       }
-      D('Admin/Child')->addRepotr($user_info, $answer, $child);
+      $model = D('Admin/Child');
+      $res = $model->addRepotr($user_info, $answer, $child);
+      if (!$res) {
+        $this->ajaxReturn(array("status" =>'1004',"msg"=>$model->getError()));
+      }
+      $this->ajaxReturn(array("status" =>'1000',"msg"=>'提交成功！'));
     }
 }

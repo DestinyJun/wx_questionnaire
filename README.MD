@@ -8,6 +8,65 @@
 * （4）1003：此账户没有进行任何问卷调查
 * （5）1004：提交失败，请重新提交
 ### 4、接口地址
+* 已提交的问卷调查报告
+  > 接口地址：http://192.168.28.245/Home/Report/addReport  
+  > 请求参数：
+  
+  |字段说明       |所属属性         |类型            |必填            |备注     |
+      | -------------|:--------------:|:--------------:|:--------------:| ------:|
+      |openid|user_info|string|必填|-|
+      |nikename|user_info|string|必填|-|
+      |sex| user_info|string|必填|在“男”跟“女”之间任选其一|
+      |tel| user_info|string|必填| 11位的正确格式电话号码|
+      
+  |字段说明       |所属属性         |类型            |必填            |备注     |
+      | -------------|:--------------:|:--------------:|:--------------:| ------:|
+      |physique_type|answer |string|必填|各个体质之间用英文,号隔开|
+      |physique_type_enable| answer|string|必填|各个体质之间用英文,号隔开|
+      
+  |字段说明       |所属属性         |类型            |必填            |备注     |
+      | -------------|:--------------:|:--------------:|:--------------:| ------:|
+      |ptel|child |string|必填|11位的正确格式电话号码|
+      |name| child|string|必填|各个体质之间用英文,号隔开|
+      |sex| child|string|必填|在“男”跟“女”之间任选其一|
+      |age| child|string|必填| |
+      |height| child|number|必填| |
+      |weight| child|number|必填| |
+      |nation| child|string|必填| |
+      |address| child|string|必填| |
+   ``` json
+   {
+   	"user_info":{
+   		"openid":"1234567891",
+   		"nikename":"小明",
+   		"sex":"男",
+   		"tel":"13888888888"
+   	},
+   	"answer":{
+   		"physique_type":"痰湿质,平和质,气虚质",
+   		"physique_type_enable":"痰湿质,平和质,气虚质"
+   	},
+   	"child":{
+   		"ptel":"13888888888",
+   		"name":"小小明",
+   		"sex":"女",
+   		"age":"5岁6个月",
+   		"height":100.0,
+   		"weight":20,
+   		"nation":"汉",
+   		"address":"贵州省贵阳市白云区"
+   	}
+   }
+   ```
+  > 请求类型：POST   
+  > Content-Type：application/javascript  
+  > 返回数据：
+  ``` json
+    {
+        "status": "1000",
+        "msg": "提交成功！"
+    }
+  ```
 * 获取已提交的问卷调查
   > 接口地址：http://192.168.28.245/Home/Report/getReport  
   > 请求参数：``{"openid":"123"}``  
