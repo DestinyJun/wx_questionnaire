@@ -1,0 +1,5 @@
+{
+    "require": {
+        "fangstar/php-validator": "^1.0"
+    }
+}

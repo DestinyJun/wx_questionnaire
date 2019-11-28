@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/vendor
 /tmp
 /out-tsc
 /src/assets/images

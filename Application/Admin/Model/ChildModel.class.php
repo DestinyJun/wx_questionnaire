@@ -8,4 +8,13 @@ class ChildModel extends CommonModel
   protected $_auto = array(
     array('addtime','time',1,'function')
   );
+
+  // 添加孩子
+  public function addRepotr($user_info,$answer,$child) {
+    $this->startTrans();
+    // 注册用户
+    $user_data = array(
+      "openid" => $user_info['openid']
+    );
+  }
 }

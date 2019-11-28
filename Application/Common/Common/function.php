@@ -1,4 +1,7 @@
 <?php
+/**
+ * 跨域处理
+ */
 function _A(){
   header("Access-Control-Allow-Origin: *");
   header('Access-Control-Allow-Headers:Accept,Referer,Host,Keep-Alive,User-Agent,X-Requested-With,Cache-Control,Content-Type,Cookie,token');
@@ -8,6 +11,7 @@ function _A(){
 }
 
 /**
+ * 请求方式为content-type时收收参数
  * @param string $param
  * @return mixed
  */

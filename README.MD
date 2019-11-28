@@ -29,7 +29,13 @@
 * 获取单个问卷测算结果
   > 接口地址：http://192.168.28.245/Home/Report/getReportResult  
   > 请求参数：``{"openid":"123","report_id":"1"}``  
-  > 请求类型：POST   
+  > 请求类型：POST 
+
+    |字段名称       |字段说明         |类型            |必填            |备注     |
+    | -------------|:--------------:|:--------------:|:--------------:| ------:|
+    |a| |string|Y|-|
+    |b| |string|Y|-|
+    
   > Content-Type：application/javascript  
   > 返回数据：
   ``` json
