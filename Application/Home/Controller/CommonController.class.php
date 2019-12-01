@@ -9,7 +9,7 @@ class CommonController extends  Controller
     parent::__construct();
     // 跨域处理
     _A();
-//   $this->getClientIp();
+    //   $this->getClientIp();
   }
   // 检查openid是否存在
   public function checkOpenid() {
