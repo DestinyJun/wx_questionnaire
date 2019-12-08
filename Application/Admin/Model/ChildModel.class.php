@@ -3,7 +3,7 @@ namespace Admin\Model;
 class ChildModel extends CommonModel
 {
   // 字段静态化
-  protected $fields = array('id','user_id','report_id','ptel','name','sex','age','height','weight','nation','address','answer','addtime');
+  protected $fields = array('id','user_id','report_id','ptel','name','sex','age','height','weight','flag','nation','address','answer','addtime');
 
   protected $_auto = array(
     array('addtime','time',1,'function')
@@ -19,6 +19,7 @@ class ChildModel extends CommonModel
       $this->error = 'openid已存在';
       return false;
     }
+    $user_info['sex'] = $user_info['sex'] == '0'?'未知':($user_info['sex'] == '2'?'女':'男');
     $user_res = $userModel->add($user_info);
     if (!$user_res) {
       $this->rollback();
@@ -39,6 +40,7 @@ class ChildModel extends CommonModel
     // 登记孩子
     $child['user_id']=$user_res;
     $child['report_id']=$report_res;
+    $child['sex'] = $child['sex'] == '0'?'未知':($child['sex'] == '2'?'女':'男');
     $child_res = $this->add($child);
     if (!$child_res) {
       $this->rollback();

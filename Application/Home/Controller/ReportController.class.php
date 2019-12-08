@@ -6,16 +6,21 @@ use FangStarNet\PHPValidator\Validator;
 class ReportController extends CommonController {
     public function getReport() {
       $openid = _I('openid');
+      $flag = _I('flag');
+      $flag_data = array(1,2);
       if (!$openid) {
+        $this->ajaxReturn(array('status'=>'1001','msg'=>'参数错误'));
+      }
+      if (!$flag || !in_array(intval($flag),$flag_data)) {
         $this->ajaxReturn(array('status'=>'1001','msg'=>'参数错误'));
       }
       $userInfo = M('user')->where("openid='{$openid}'")->find();
       if (!$userInfo) {
         $this->ajaxReturn(array('status'=>'1003','msg'=>'此账户没有进行任何问卷调查'));
       }
-      $report = M('child')->alias('a')->field('a.name,a.report_id')->where("a.user_id={$userInfo['id']}")->select();
+      $report = M('child')->alias('a')->field('a.name,a.report_id')->where("a.user_id={$userInfo['id']} AND a.flag={$flag}")->select();
       if (!$report) {
-        $this->ajaxReturn(array('status'=>'1003','msg'=>'此账户没有进行任何问卷调查'));
+        $this->ajaxReturn(array('status'=>'1005','msg'=>'该账户在此年龄段下没有进行任何问卷调查'));
       }
       $this->ajaxReturn(array('status'=>'1000','msg'=>'查询成功','data'=>$report));
     }
@@ -58,7 +63,7 @@ class ReportController extends CommonController {
       Validator::make($user_info, [
         "openid" => "present|alpha_num",
         "nikename" => "present",
-        'sex' => "in:男,女",
+        'sex' => "in:0,1,2",
         "tel" => "present|mobile",
       ]);
       if (Validator::has_fails()) {
@@ -78,15 +83,22 @@ class ReportController extends CommonController {
       Validator::make($child, [
         "ptel" => "present|mobile",
         "name" => "present",
-        "sex" => "in:男,女",
+        "sex" => "in:0,1,2",
         "age" => "present",
         "height" => "present|numeric_str",
         "weight" => "present|numeric_str",
+        "flag" => "present|in:1,2",
         "nation" => "present",
         "address" => "present",
       ]);
       if (Validator::has_fails()) {
         $this->ajaxReturn(array("status" =>'1001',"msg"=>Validator::error_msg()));
+      }
+      if ($child['flag']==1 && intval(substr($child['age'],0,1))>=6) {
+        $this->ajaxReturn(array("status" =>'1006',"msg"=>'年龄段参数不符合要求！'));
+      }
+      if ($child['flag']==2 && intval(substr($child['age'],0,1))<6) {
+        $this->ajaxReturn(array("status" =>'1006',"msg"=>'年龄段参数不符合要求！'));
       }
       $model = D('Admin/Child');
       $res = $model->addRepotr($user_info, $answer, $child);

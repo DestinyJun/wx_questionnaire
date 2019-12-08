@@ -22,7 +22,7 @@ class UserModel extends CommonModel
   // 分页查询
   public function selectAll() {
     $count = $this->count();
-    $pagesize = 1;
+    $pagesize = 10;
     $page = new Page($count,$pagesize);
     $page->setConfig('prev','上一页');
     $page->setConfig('next','下一页');

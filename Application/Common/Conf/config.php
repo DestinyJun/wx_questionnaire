@@ -11,7 +11,10 @@ return array(
   'DEFAULT_MODULE'        =>  'Admin',  // 默认模块
   'DEFAULT_CONTROLLER'    =>  'Login', // 默认控制器名称
   'DEFAULT_ACTION'        =>  'index', // 默认操作名称
+
+  // 项目安全配置
   'MODULE_ALLOW_LIST'     =>  array('Admin','Home'), // 设置容许访问的模块（好像主配置文件里面没有,但是配置有效）
+//  'MODULE_DENY_LIST'     =>  array('Home'), // 设置禁止访问的模块
 
   // 配置数据库
   'DB_TYPE' => 'mysql',     // 数据库类型
