@@ -48,6 +48,6 @@ class ChildModel extends CommonModel
       return false;
     }
     $this->commit();
-    return true;
+    return $child_res;
   }
 }

@@ -105,6 +105,6 @@ class ReportController extends CommonController {
       if (!$res) {
         $this->ajaxReturn(array("status" =>'1004',"msg"=>$model->getError()));
       }
-      $this->ajaxReturn(array("status" =>'1000',"msg"=>'提交成功！'));
+      $this->ajaxReturn(array("status" =>'1000',"msg"=>'提交成功！',"data"=>array("child_id"=>$res)));
     }
 }
