@@ -15,18 +15,16 @@ class ChildModel extends CommonModel
     // 登记用户
     $userModel = D('Admin/User');
     $user_info['addtime'] = time();
-    if ($userModel->where("openid='{$user_info['openid']}'")->find()) {
-      $this->error = 'openid已存在';
-      return false;
-    }
-    $user_info['sex'] = $user_info['sex'] == '0'?'未知':($user_info['sex'] == '2'?'女':'男');
-    $user_res = $userModel->add($user_info);
+    $user_res = $userModel->where("openid='{$user_info['openid']}'")->find();
     if (!$user_res) {
-      $this->rollback();
-      $this->error = '用户登记失败，请重新提交';
-      return false;
+      $user_info['sex'] = $user_info['sex'] == '0'?'未知':($user_info['sex'] == '2'?'女':'男');
+      $user_res = $userModel->add($user_info);
+      if (!$user_res) {
+        $this->rollback();
+        $this->error = '用户登记失败，请重新提交';
+        return false;
+      }
     }
-
     // 添加报告
     $reportModel = M('physique_report');
     $answer['addtime'] = time();

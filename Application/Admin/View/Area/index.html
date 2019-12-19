@@ -1,0 +1,78 @@
+<extend name="Public/base"/>
+<block name="title">区域开放</block>
+<block name="location">区域开放配置</block>
+<block name="content">
+  <div class="row">
+    <div class="col-sm-6">
+      <!--身份选择-->
+      <div class="form-group" style="overflow: hidden">
+        <label for="parent_id" class="col-xs-12 col-sm-3 control-label no-padding-right align-middle" style="margin-top: 5px">请选择省份：</label>
+        <div class="col-xs-12 col-sm-5 align-middle">
+        <span class="block input-icon input-icon-right">
+          <select class="chosen-select form-control" id="parent_id" name="parent_id" style="cursor: pointer">
+            <option value="">无</option>
+            <volist name="province" id="item">
+              <option value="{$item.province_code}" <eq name="item.province_code" value="110000">selected</eq>>{$item.province_name}</option>
+            </volist>
+          </select>
+        </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <table id="simple-table" class="table  table-bordered table-hover">
+    <thead>
+    <tr>
+      <th class="detail-col">#</th>
+      <th>区域名称</th>
+      <th>是否开放</th>
+    </tr>
+    </thead>
+    <tbody id="tbody">
+    <volist name="city" id="item" key="k">
+      <tr>
+        <td>{$k}</td>
+        <td>{$item.city_name}</td>
+        <td><input type="checkbox" name="is_open" value="1" onclick="inputChange(this,{$item.city_code})" <eq name="item.is_open" value="1">checked</eq>></td>
+      </tr>
+    </volist>
+    </tbody>
+  </table>
+</block>
+<block name="js">
+  <script>
+    $('#parent_id').on('change',function () {
+        var province = $(this).val();
+        var html = '';
+        $.get("/Area/selectCity/code/"+province,function (data) {
+          for (let i=0;i<data.length;i++) {
+            html += `
+           <tr>
+            <td>${i+1}</td>
+            <td>${data[i].city_name}</td>
+            <td><input type="checkbox" name="is_open" value="${data[i].is_open}" onclick="inputChange(this,${data[i].city_code})"></td>
+          </tr>
+          `
+          }
+          $('#tbody').html(html);
+          for (let i=0;i<$('input').length;i++) {
+            if ($($('input')[i]).val() === '1') {
+              $($('input')[i]).attr('checked','true')
+            }
+          }
+        })
+    });
+    function inputChange(event,city_code) {
+      if ($(event).is(':checked')) {
+        $.get("/Area/edit/city_code/"+city_code+"/is_open/1",function (data) {
+          console.log(data);
+        })
+      } else {
+        console.log('取消');
+        $.get("/Area/edit/city_code/"+city_code+"/is_open/0",function (data) {
+          console.log(data);
+        })
+      }
+    }
+  </script>
+</block>
