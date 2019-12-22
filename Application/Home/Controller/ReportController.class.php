@@ -4,6 +4,8 @@ namespace Home\Controller;
 require PROJECT_ROOT.'vendor'.DS.'autoload.php';
 use FangStarNet\PHPValidator\Validator;
 class ReportController extends CommonController {
+
+    // 获取历史报告
     public function getReport() {
       $openid = _I('openid');
       $flag = _I('flag');
@@ -24,6 +26,8 @@ class ReportController extends CommonController {
       }
       $this->ajaxReturn(array('status'=>'1000','msg'=>'查询成功','data'=>$report));
     }
+
+    // 获取报告结果
     public function getReportResult() {
       $report_id = intval(_I('report_id'));
       $openid = _I('openid');
@@ -36,6 +40,8 @@ class ReportController extends CommonController {
       }
       $this->ajaxReturn(array('status'=>'1000','msg'=>'请求成功','data'=>$report));
     }
+
+    // 添加家庭饮食问卷调查
     public function addReportFamily() {
       $child_id = intval(_I('child_id'));
       $answer = _I('answer');
@@ -53,6 +59,8 @@ class ReportController extends CommonController {
       }
       $this->ajaxReturn(array('status'=>'1000','msg'=>'提交成功！'));
     }
+
+    // 添加普通问卷调查
     public function addReport()
     {
       $user_info = _I('user_info');
@@ -106,4 +114,32 @@ class ReportController extends CommonController {
       }
       $this->ajaxReturn(array("status" =>'1000',"msg"=>'提交成功！',"data"=>array("child_id"=>$res)));
     }
+
+    // 问卷调查区域认证
+    public function authReport() {
+      $openid = _I('openid');
+      $city_name = _I('city_name');
+      $data = array(
+        'openid'=>$openid,
+        'city_name'=>$city_name,
+      );
+      // $user_info校验
+      Validator::make($data, [
+        "openid" => "present",
+        "city_name" => "present",
+      ]);
+      if (Validator::has_fails()) {
+        $this->ajaxReturn(array("status" =>'1001',"msg"=>Validator::error_msg()));
+      }
+      $city_info = M('city')->where("city_name like '{$city_name}%'")->find();
+//      $user_info = M('user')->where("openid='{$openid}'")->find();
+      if (!$city_info) {
+        $this->ajaxReturn(array('status'=>'1007','msg'=>'查询的城市不存在!'));
+      }
+      if ($city_info['is_open']) {
+        $this->ajaxReturn(array('status'=>'1000','msg'=>'当前城市已开通问卷调查!'));
+      } else {
+        $this->ajaxReturn(array('status'=>'1008','msg'=>'当前城市尚未开通问卷调查!'));
+      }
+  }
 }
