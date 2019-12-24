@@ -53,6 +53,9 @@ class ReportController extends CommonController {
       if (!$info) {
         $this->ajaxReturn(array('status'=>'1003','msg'=>'此账户没有进行任何问卷调查！'));
       }
+      if (!($info['answer']=='')) {
+        $this->ajaxReturn(array('status'=>'1009','msg'=>'当前用户已经做了家庭问卷调查，请不要重复提交！'));
+      }
       $res= $model->where("id={$child_id}")->setField("answer","'{$answer}'");
       if (!$res){
         $this->ajaxReturn(array('status'=>'1004','msg'=>'提交失败，请重新提交！'));

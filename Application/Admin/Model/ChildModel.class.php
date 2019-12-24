@@ -37,6 +37,7 @@ class ChildModel extends CommonModel
 
     // 登记孩子
     $child['user_id']=$user_res;
+    $child['answer']='';
     $child['report_id']=$report_res;
     $child['sex'] = $child['sex'] == '0'?'未知':($child['sex'] == '2'?'女':'男');
     $child_res = $this->add($child);
