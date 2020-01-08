@@ -18,7 +18,7 @@ class ChildModel extends CommonModel
     $user_res = $userModel->where("openid='{$user_info['openid']}'")->find();
     if (!$user_res) {
       $user_info['sex'] = $user_info['sex'] == '0'?'未知':($user_info['sex'] == '2'?'女':'男');
-      $user_res = $userModel->add($user_info);
+      $user_res = array('id'=>$userModel->add($user_info));
       if (!$user_res) {
         $this->rollback();
         $this->error = '用户登记失败，请重新提交';
@@ -34,9 +34,8 @@ class ChildModel extends CommonModel
       $this->error = '问卷报告登记失败，请重新提交';
       return false;
     }
-
     // 登记孩子
-    $child['user_id']=$user_res;
+    $child['user_id']=$user_res['id'];
     $child['answer']='';
     $child['report_id']=$report_res;
     $child['sex'] = $child['sex'] == '0'?'未知':($child['sex'] == '2'?'女':'男');
