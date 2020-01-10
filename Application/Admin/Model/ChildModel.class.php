@@ -25,15 +25,20 @@ class ChildModel extends CommonModel
         return false;
       }
     }
+
     // 添加报告
     $reportModel = M('physique_report');
     $answer['addtime'] = time();
+    if (empty($answer['physique_asthma'])) {
+      $answer['physique_asthma'] = '';
+    }
     $report_res = $reportModel->add($answer);
     if (!$report_res) {
       $this->rollback();
       $this->error = '问卷报告登记失败，请重新提交';
       return false;
     }
+
     // 登记孩子
     $child['user_id']=$user_res['id'];
     $child['answer']='';

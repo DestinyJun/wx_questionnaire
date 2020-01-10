@@ -69,7 +69,6 @@ class ReportController extends CommonController {
       $user_info = _I('user_info');
       $answer = _I('answer');
       $child = _I('child');
-
       // $user_info校验
       Validator::make($user_info, [
         "openid" => "present|alpha_num",
@@ -84,6 +83,7 @@ class ReportController extends CommonController {
       // $answer校验
       Validator::make($answer, [
         "physique_type" => "present",
+        "physique_answer" => "present",
       ]);
       if (Validator::has_fails()) {
         $this->ajaxReturn(array("status" =>'1001',"msg"=>Validator::error_msg()));
