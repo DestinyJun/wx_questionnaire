@@ -1,5 +1,7 @@
 <?php
 namespace Admin\Model;
+use Think\Page;
+
 class ChildModel extends CommonModel
 {
   // 字段静态化
@@ -42,6 +44,7 @@ class ChildModel extends CommonModel
     // 登记孩子
     $child['user_id']=$user_res['id'];
     $child['answer']='';
+    $child['addtime']=time();
     $child['report_id']=$report_res;
     $child['sex'] = $child['sex'] == '0'?'未知':($child['sex'] == '2'?'女':'男');
     $child_res = $this->add($child);
@@ -52,5 +55,38 @@ class ChildModel extends CommonModel
     }
     $this->commit();
     return $child_res;
+  }
+
+  // 查询孩子体质报告列表
+  public function selectAll() {
+    // 查询总条数
+    $count = $this->count();
+    // 定义每页查询的条数
+    $pageSize = 10;
+    // new一个分页类
+    $page = new Page($count,$pageSize);
+    // 自定义分页按钮内容
+    $page->setConfig('prev','上一页');
+    $page->setConfig('next','下一页');
+    $page->setConfig('first','首页');
+    $page->setConfig('last','尾页');
+    $page->setConfig('theme','%FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
+    // 得到分页的HTML
+    $str = $page->show();
+    // 接收当前分页
+    $p = I('get.p');
+    // 查询数据列表
+    $data = $this->alias('a')->field('a.*,b.physique_type,c.nikename')
+      ->join('left join wx_physique_report b on a.report_id=b.id')
+      ->join('left join wx_user c on a.user_id=c.id')
+      ->page($p,$pageSize)->select();
+    if (!$data){
+      $this->error = '暂无数据!';
+    }
+//    dump($data);exit();
+    return array(
+      'data' => $data,
+      'page' => $str
+    );
   }
 }
