@@ -104,10 +104,12 @@ class ReportController extends CommonController {
       if (Validator::has_fails()) {
         $this->ajaxReturn(array("status" =>'1001',"msg"=>Validator::error_msg()));
       }
-      if ($child['flag']==1 && intval(substr($child['age'],0,1))>=6) {
+      // 6-12岁
+      if (intval($child['flag'])==1 && intval(substr($child['age'],0,strrpos($child['age'],'岁')))>=6) {
         $this->ajaxReturn(array("status" =>'1006',"msg"=>'年龄段参数不符合要求！'));
       }
-      if ($child['flag']==2 && intval(substr($child['age'],0,1))<6) {
+      // 3-6岁
+      if (intval($child['flag'])==2 && intval(substr($child['age'],0,strrpos($child['age'],'岁')))<6) {
         $this->ajaxReturn(array("status" =>'1006',"msg"=>'年龄段参数不符合要求！'));
       }
       $model = D('Admin/Child');
