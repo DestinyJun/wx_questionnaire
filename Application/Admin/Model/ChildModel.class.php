@@ -5,7 +5,7 @@ use Think\Page;
 class ChildModel extends CommonModel
 {
   // 字段静态化
-  protected $fields = array('id','user_id','report_id','ptel','name','sex','age','height','weight','flag','nation','address','answer','addtime');
+  protected $fields = array('id','user_id','report_id','ptel','name','sex','age','height','weight','flag','nation','address','answer','addtime','is_do','is_diet');
 
   protected $_auto = array(
     array('addtime','time',1,'function')
