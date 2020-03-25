@@ -29,8 +29,10 @@ define('APP_PATH','./Application'.DS);
 // 设置应用编码
 header('content-type:text/html;charset=utf-8');
 
+// Composer自动加载
+require './vendor/autoload.php';
+
 // 引入ThinkPHP入口文件
 require './ThinkPHP/ThinkPHP.php';
-
 
 // 亲^_^ 后面不需要任何代码了 就是如此简单

@@ -1,7 +1,5 @@
 <?php
-
 namespace Home\Controller;
-require PROJECT_ROOT.'vendor'.DS.'autoload.php';
 use FangStarNet\PHPValidator\Validator;
 class ReportController extends CommonController {
 

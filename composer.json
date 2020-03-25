@@ -1,7 +1,14 @@
 {
+    "name": "twst/sdxd",
+    "description": "123",
+    "authors": [
+        {
+            "name": "DestinyJun",
+            "email": "429771890@qq.com"
+        }
+    ],
     "require": {
-        "fangstar/php-validator": "^1.0",
-      "ext-curl": "*",
-      "ext-json": "*"
+        "phpoffice/phpspreadsheet": "^1.11",
+        "fangstar/php-validator": "^1.0"
     }
 }
