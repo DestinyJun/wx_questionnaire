@@ -38,8 +38,10 @@
         <td>{$item.addtime|date='Y-m-d H:i:s',###}</td>
         <td>
           <div class="hidden-sm hidden-xs btn-group">
-            <a class="btn btn-xs btn-warning" href="{:U('exportExcel')}">查看详情</a>
-            <!--<input type="button" class="btn btn-xs btn-danger" onclick="deleteItem('{$item.id}')" value="删除"/>-->
+            <a class="btn btn-xs btn-warning" href={:U('exportPhysiqueExcel',array('id'=>$item['id']))}>体质导出</a>
+          </div>
+          <div class="hidden-sm hidden-xs btn-group">
+            <a class="btn btn-xs btn-primary" href={:U('exportDietExcel',array('id'=>$item['id']))}>饮食导出</a>
           </div>
         </td>
       </tr>
@@ -60,6 +62,11 @@
       if (window.confirm('确定要删除吗？')) {
         location.href = "/User/del/id/"+id;
       }
+    }
+    function exportDietExcel(id) {
+      // console.log("{:U('exportDietExcel','id="+id+"')}");
+      // location.href = "{:U('exportDietExcel','id="+id+"')}";
+      // location.href = "/Child/exportDietExcel/id/"+id;
     }
   </script>
 </block>

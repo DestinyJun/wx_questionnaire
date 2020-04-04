@@ -51,7 +51,9 @@ class ReportController extends CommonController {
       // $answer校验
       Validator::make($answer, [
         "physique_type" => "present",
-        "physique_answer" => "present",
+        "physique_asthma" => "in:0,1",
+        "physique_result_list" => "present",
+        "physique_answer_list" => "present",
       ]);
       if (Validator::has_fails()) {
         $this->ajaxReturn(array("status" =>'1001',"msg"=>Validator::error_msg()));
@@ -80,6 +82,8 @@ class ReportController extends CommonController {
       if (intval($child['flag'])==2 && intval(substr($child['age'],0,strrpos($child['age'],'岁')))<6) {
         $this->ajaxReturn(array("status" =>'1006',"msg"=>'年龄段参数不符合要求！'));
       }
+//      dump(array_to_str($answer['physique_asthma_list']));exit();
+//      $this->ajaxReturn(array("status" =>'1000',"msg"=>'提交成功！',"data"=>implode('-',$answer['physique_result_list'])));
       $model = D('Admin/Child');
       $res = $model->addRepotr($user_info, $answer, $child);
       if (!$res) {
@@ -92,6 +96,7 @@ class ReportController extends CommonController {
     public function addReportFamily() {
       $child_id = intval(_I('child_id'));
       $answer = _I('answer');
+      $family = _I('family');
       if ($child_id<1 || !$answer) {
         $this->ajaxReturn(array('status'=>'1001','msg'=>'参数错误！'));
       }
@@ -103,11 +108,15 @@ class ReportController extends CommonController {
       if (!($info['answer']=='')) {
         $this->ajaxReturn(array('status'=>'1009','msg'=>'当前用户已经做了家庭问卷调查，请不要重复提交！'));
       }
+      $answer = array_to_str_2($answer);
+      $family = array_to_str($family);
+//      dump($family);exit();
       $res= $model->where("id={$child_id}")->setField("answer","'{$answer}'");
       if (!$res){
         $this->ajaxReturn(array('status'=>'1004','msg'=>'提交失败，请重新提交！'));
       }
       $model->where("id={$child_id}")->setField("is_do",1);
+      $model->where("id={$child_id}")->setField("family","'{$family}'");
       $this->ajaxReturn(array('status'=>'1000','msg'=>'提交成功！'));
     }
 
@@ -149,4 +158,11 @@ class ReportController extends CommonController {
       }
       $this->ajaxReturn(array('status'=>'1000','msg'=>'请求成功','data'=>$report));
     }
+
+    // 测试
+    public function test() {
+      $answer = _I('answer');
+      $this->ajaxReturn(array('status'=>'1000','msg'=>'提交成功！','data'=> $answer));
+    }
+
 }

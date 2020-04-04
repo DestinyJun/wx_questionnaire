@@ -58,3 +58,95 @@ function http_curl($url='',$data=array(),$method='get',$https=false) {
   // 6、将具体请求到的数据转化为PHP的数组格式并返回
   return json_decode($res,true);
 }
+
+/**
+ * @param $arr
+ * @return string
+ */
+function array_to_str($arr) {
+  $str = '';
+  foreach ($arr as $k=>$value) {
+    if (is_array($value)) {
+      $length = count($value);
+      for ($i=0;$i<$length;$i++) {
+        $str.= $value[$i].'-';
+      }
+      $str = rtrim($str,'-');
+    }
+    else {
+      $str .= $value;
+    }
+    $str.=',';
+  }
+  $str = rtrim($str,',');
+  return $str;
+}
+
+/**
+ * @param $arr
+ * @return string
+ */
+function array_to_str_2($arr) {
+  $str = '';
+  foreach ($arr as $k=>$value) {
+    if (is_array($value)) {
+      $length = count($value);
+      for ($i=0;$i<$length;$i++) {
+        $length1 = count($value[$i]);
+        for($j=0;$j<$length1;$j++){
+          $str .= $value[$i][$j].'+';
+        }
+        $str= rtrim($str,'+');
+        $str.= '-';
+      }
+      $str = rtrim($str,'-');
+    }
+    else {
+      $str .= $value;
+    }
+    $str.=',';
+  }
+  $str = rtrim($str,',');
+  return $str;
+}
+
+function str_to_array($str) {
+  $arr1 = explode(',',$str);
+  foreach ($arr1 as $value) {
+    $arr[] = explode('-',$value);
+  }
+  return $arr;
+}
+
+function str_to_array3($str) {
+  $arr1 = explode(',',$str);
+  foreach ($arr1 as $value) {
+    $arr2 = explode('-',$value);
+    if (is_array($arr2)) {
+      $arr[] = $arr2;
+    } else {
+      array_push($arr,$value);
+    }
+  }
+  return $arr;
+}
+
+/**
+ * 二维数组平铺开
+ * @param $array
+ * @return array
+ */
+function arrTwo_to_arrOne($array) {
+  $arr = [];
+  foreach ($array as $value) {
+    if (is_array($value)) {
+      foreach ($value as $val) {
+        $arr[] = $val;
+      }
+    } else {
+      $arr[] = $value;
+    }
+  }
+  return $arr;
+}
+

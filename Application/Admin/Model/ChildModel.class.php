@@ -5,7 +5,7 @@ use Think\Page;
 class ChildModel extends CommonModel
 {
   // 字段静态化
-  protected $fields = array('id','user_id','report_id','ptel','name','sex','age','height','weight','flag','nation','address','answer','addtime','is_do','is_diet');
+  protected $fields = array('id','user_id','report_id','ptel','name','sex','age','height','weight','flag','nation','address','family','answer','addtime','is_do','is_diet');
 
   protected $_auto = array(
     array('addtime','time',1,'function')
@@ -13,6 +13,7 @@ class ChildModel extends CommonModel
 
   // 添加孩子
   public function addRepotr($user_info,$answer,$child) {
+
     $this->startTrans();
     // 登记用户
     $userModel = D('Admin/User');
@@ -31,9 +32,9 @@ class ChildModel extends CommonModel
     // 添加报告
     $reportModel = M('physique_report');
     $answer['addtime'] = time();
-    if (empty($answer['physique_asthma'])) {
-      $answer['physique_asthma'] = '';
-    }
+    $answer['physique_asthma_list'] = array_to_str( $answer['physique_asthma_list']);
+    $answer['physique_result_list'] = array_to_str( $answer['physique_result_list']);
+    $answer['physique_answer_list'] = array_to_str( $answer['physique_answer_list']);
     $report_res = $reportModel->add($answer);
     if (!$report_res) {
       $this->rollback();
@@ -88,5 +89,28 @@ class ChildModel extends CommonModel
       'data' => $data,
       'page' => $str
     );
+  }
+
+  // 查询单个孩子的体质数据
+  public function findPhysiqueOne($id) {
+    $data = $this->alias('a')
+      ->join('left join wx_physique_report b on a.report_id=b.id')
+      ->where("a.id=$id")->find();
+    if (!$data){
+      $this->error = '暂无数据!';
+    }
+    return $data;
+  }
+
+  // 查询单个孩子基本信息
+  public function findChildOne($id) {
+    $data = $this->alias('a')
+      ->field('a.*,b.physique_asthma,b.physique_asthma_list')
+      ->join('left join wx_physique_report b on a.report_id=b.id')
+      ->where("a.id=$id")->find();
+    if (!$data){
+      $this->error = '暂无数据!';
+    }
+    return $data;
   }
 }
