@@ -29,15 +29,6 @@ class ChildController extends CommonController
     $physique_asthma_list = $data['physique_asthma_list']; // 哮喘问卷答案
     $physique_answer_list = $data['physique_answer_list']; // 体质问卷答案
     $physique_result_list = $data['physique_result_list']; // 体质检测结果
-    //告诉浏览器输出2007本能的Excel文件
-    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    //告诉浏览器输出浏览器名称
-    header('Content-Disposition: attachment;filename="01simple.xlsx"');
-    //禁止缓存
-    header('Cache-Control: max-age=0');
-    $spreadsheet = new Spreadsheet();
-    $sheet = $spreadsheet->getActiveSheet(); // 得到一个表格对象
-
     // 体质问卷表格数据处理
     $user_key = ['ptel','name','sex','age','height','weight','nation','address'];
     foreach ($data as $key=>$value) {
@@ -58,9 +49,10 @@ class ChildController extends CommonController
     foreach (explode(',',$physique_answer_list) as $key=>$value) {
       $info[] = explode('-',$value);
     }
-    $info[] = $physique_result_list;
+    foreach (explode(',',$physique_result_list) as $key=>$value) {
+      $info[] = explode('-',$value);
+    }
     $info[] = $data['physique_type'];
-
     $excel = array(
       '联系电话：',
       '孩子的姓名：',
@@ -97,8 +89,7 @@ class ChildController extends CommonController
       '各个体质得分：',
       '最终输出结果：'
     );
-    // 体质答案跟题目匹配
-    foreach ($excel as $key=>$value) {
+    /*foreach ($excel as $key=>$value) {
       if (is_array($info[$key])) {
         if (in_array('asthma',$info[$key])) {
           $excel[$key].= "{$info[$key][0]}岁{$info[$key][1]}月";
@@ -121,12 +112,101 @@ class ChildController extends CommonController
       } else {
         $excel[$key].= $info[$key];
       }
+    }*/
+    foreach ($info as $key=>$value) {
+      if (is_array($info[$key])) {
+        if (in_array('asthma',$info[$key])) {
+          $info[$key] = "{$info[$key][0]}岁{$info[$key][1]}月";
+          continue;
+        };
+        if (in_array('flag',$info[$key])) {
+          unset($info[$key][array_search('flag',$info[$key])]);
+        }
+      }
     }
+    // 体质答案跟题目匹配
+    /* $info_answer = [];
+     foreach ($excel as $key => $value) {
+       if (is_array($info[$key])) {
+         if (in_array('asthma', $info[$key])) {
+           $info_answer[] = "{$info[$key][0]}岁{$info[$key][1]}月";
+           continue;
+         };
+         if (in_array('flag', $info[$key])) {
+           foreach ($excel[$key] as $key_excel => $excel_value) {
+             $info_answer[] = "{$info[$key][$key_excel]}";
+           }
+         }
+         else {
+           $arr = [];
+           foreach ($excel[$key] as $key_excel => $excel_value) {
+             $flag = false;
+             if ($key_excel === 0 ) {
+               $arr[] = '空';
+               continue;
+             }
+             foreach ($info[$key] as $k=>$v) {
+               if ($key_excel === (intval($v)+1)) {
+                 $arr[] ='选中';
+                 $flag = false;
+                 break;
+               }else {
+                 $flag = true;
+               }
+             }
+             if ($flag) {
+               $arr[] = '空';
+             }
+           }
+           $info_answer[] = $arr;
+         };
+       } else {
+         $info_answer[] = $info[$key];
+       }
+     }*/
+//    dump($info);exit();
+    $name = "{$data['name']}-体质报告";
     // 数据写入表格
-    foreach (arrTwo_to_arrOne($excel) as $key=>$value) {
-      $sheet->setCellValue('A'.($key+1), $key+1);
-      $sheet->setCellValue('B'.($key+1), $value);
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet(); // 得到一个表格对象
+    $sheet->getColumnDimension('B')->setWidth(50);// 设置列宽
+    $styleArray = [
+      'borders' => [
+        'outline' => [
+          'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN ,
+          'color' => ['argb' => '0C0C0C'],
+        ],
+      ],
+      'alignment' => [
+        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+      ],
+    ];
+    $num = 1;
+    foreach ($info as $key=>$value) {
+      if (is_array($value)) {
+        $length = count($value);
+        foreach ($value as $k=>$v) {
+          $sheet->setCellValue('B'.($num), $v);
+          $sheet->getStyle('B'.($num))->applyFromArray($styleArray);// 设置单元格样式
+          $num++;
+        }
+        $sheet->setCellValue('A'.($num-$length), $num);
+        $sheet->mergeCells('A'.($num-$length).':A'.($num-1));
+        $sheet->getStyle('A'.($num-$length))->applyFromArray($styleArray); // 设置单元格样式
+      } else {
+        $sheet->setCellValue('A'.($num), $num);
+        $sheet->getStyle('A'.($num))->applyFromArray($styleArray); // 设置单元格样式
+        $sheet->setCellValue('B'.($num), $value);
+        $sheet->getStyle('B'.($num))->applyFromArray($styleArray);// 设置单元格样式
+        $num++;
+      }
     }
+    //告诉浏览器输出2007本能的Excel文件
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    //告诉浏览器输出浏览器名称
+    header('Content-Disposition: attachment;filename='.$name.'.xlsx');
+    //禁止缓存
+    header('Cache-Control: max-age=0');
     $writer = new Xlsx($spreadsheet); // 把表格对象写入
     $writer->save('php://output'); // 导出表格对象文件
   }
@@ -136,7 +216,6 @@ class ChildController extends CommonController
     $id = I('get.id');
     $model = D('Child');
     $data = $model->findChildOne($id);
-    // 哮喘数据
     $physique_asthma = $data['physique_asthma']; // 是否哮喘
     $physique_asthma_list = $data['physique_asthma_list']; // 哮喘问卷答案
     // 孩子基础信息数据处理
@@ -149,7 +228,8 @@ class ChildController extends CommonController
     // 哮喘数据处理
     if (intval($physique_asthma) == 1) {
       $info[] = '是';
-    }else {
+    }
+    else {
       $info[] = '否';
     }
     foreach (explode(',',$physique_asthma_list) as $key=>$value) {
@@ -186,6 +266,7 @@ class ChildController extends CommonController
       }
       $info[] = $arr1;
     }
+    dump($info);exit();
     // 题库数据
     $excel = array(
       '联系电话：',
@@ -216,6 +297,7 @@ class ChildController extends CommonController
       array('坚果类','核桃','松子','榛子','巴旦木','开心果','腰果','葵花子或花生','每日坚果'),
       array('零食类','油炸类/膨化类','甜点类','巧克力','奶酪','碳酸饮料类','甜饮料类','果脯蜜饯类','饭菜中应用辣椒，咖喱及孜然调料的'),
       array('饮水量','每日饮水量为：'),
+      array('调料频率','饭菜中应用辣椒，咖喱及孜然调料的：'),
       array('主食比例','主食：蔬菜：肉：蛋奶：水果='),
     );
     // 答案题库数据匹配
@@ -338,22 +420,34 @@ class ChildController extends CommonController
     // 数据写入表格
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet(); // 得到一个表格对象
+    $sheet->getColumnDimension('B')->setWidth(80);// 设置列宽
+    $styleArray = [
+      'borders' => [
+        'outline' => [
+          'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN ,
+          'color' => ['argb' => '0C0C0C'],
+        ],
+      ],
+      'alignment' => [
+        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+      ],
+    ];
     foreach (arrTwo_to_arrOne($excel) as $key=>$value) {
       $sheet->setCellValue('A'.($key+1), $key+1);
+      $sheet->getStyle('A'.($key+1))->applyFromArray($styleArray); // 设置单元格样式
       $sheet->setCellValue('B'.($key+1), $value);
+      $sheet->getStyle('B'.($key+1))->applyFromArray($styleArray); // 设置单元格样式
     }
     $writer = new Xlsx($spreadsheet); // 把表格对象写入
     /*******************导出表格***********************/
+    $name = "{$data['name']}-饮食报告";
     //告诉浏览器输出2007本能的Excel文件
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     //告诉浏览器输出浏览器名称
-    header('Content-Disposition: attachment;filename="01simple.xlsx"');
+    header('Content-Disposition: attachment;filename='.$name.'.xlsx');
     //禁止缓存
     header('Cache-Control: max-age=0');
     $writer->save('php://output'); // 导出表格对象文件
-//    print_r($info);
-//    dump($answer);
-//    dump($excel);
   }
 }
 
