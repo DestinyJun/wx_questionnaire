@@ -42,10 +42,24 @@ class ChildController extends CommonController
     }else {
       $info[] = '否';
     }
-    foreach (explode(',',$physique_asthma_list) as $key=>$value) {
-      $arr = explode('-',$value);
-      $info[] = $arr;
+    $asthma = ['A','B','C','D','E','F','G','H'];
+    if ($physique_asthma_list) {
+      foreach (explode(',',$physique_asthma_list) as $key=>$value) {
+        $arr = explode('-',$value);
+        if (in_array('asthma',$arr)) {
+          $info[] = $arr;
+        } else {
+          foreach ($arr as $k=>$v) {
+            $arr1[] = $asthma[$v];
+          }
+          $info[] = $arr1;
+        }
+      }
+    } else {
+      $info[] = '患哮喘的年龄：无';
+      $info[] = '哮喘的治疗方案：无';
     }
+
     foreach (explode(',',$physique_answer_list) as $key=>$value) {
       $info[] = explode('-',$value);
     }
@@ -164,7 +178,6 @@ class ChildController extends CommonController
          $info_answer[] = $info[$key];
        }
      }*/
-//    dump($info);exit();
     $name = "{$data['name']}-体质报告";
     // 数据写入表格
     $spreadsheet = new Spreadsheet();
@@ -190,10 +203,11 @@ class ChildController extends CommonController
           $sheet->getStyle('B'.($num))->applyFromArray($styleArray);// 设置单元格样式
           $num++;
         }
-        $sheet->setCellValue('A'.($num-$length), $num);
+        $sheet->setCellValue('A'.($num-$length), $num-$length);
         $sheet->mergeCells('A'.($num-$length).':A'.($num-1));
         $sheet->getStyle('A'.($num-$length))->applyFromArray($styleArray); // 设置单元格样式
-      } else {
+      }
+      else {
         $sheet->setCellValue('A'.($num), $num);
         $sheet->getStyle('A'.($num))->applyFromArray($styleArray); // 设置单元格样式
         $sheet->setCellValue('B'.($num), $value);
@@ -216,6 +230,9 @@ class ChildController extends CommonController
     $id = I('get.id');
     $model = D('Child');
     $data = $model->findChildOne($id);
+    if (!$data['answer'] || !$data['family']) {
+      $this->error('该孩子尚未做饮食问卷调查！');
+    }
     $physique_asthma = $data['physique_asthma']; // 是否哮喘
     $physique_asthma_list = $data['physique_asthma_list']; // 哮喘问卷答案
     // 孩子基础信息数据处理
@@ -232,10 +249,17 @@ class ChildController extends CommonController
     else {
       $info[] = '否';
     }
-    foreach (explode(',',$physique_asthma_list) as $key=>$value) {
-      $arr = explode('-',$value);
-      $info[] = $arr;
+    if ($physique_asthma_list) {
+      foreach (explode(',',$physique_asthma_list) as $key=>$value) {
+        $arr = explode('-',$value);
+        $info[] = $arr;
+      }
     }
+    else {
+      $info[] = [];
+      $info[] = [];
+    }
+
     // 一般家庭调查数据处理
     $family = trim($data['family'],'\'');
     foreach (explode(',',$family) as $key=>$value) {
@@ -266,7 +290,6 @@ class ChildController extends CommonController
       }
       $info[] = $arr1;
     }
-    dump($info);exit();
     // 题库数据
     $excel = array(
       '联系电话：',
@@ -303,6 +326,12 @@ class ChildController extends CommonController
     // 答案题库数据匹配
     foreach ($excel as $key=>$value) {
       if (is_array($info[$key])) {
+        if (count($info[$key]) === 0) {
+          foreach ($excel[$key] as $key_excel=>$excel_value) {
+            $excel[$key][$key_excel].='';
+          }
+          continue;
+        }
         if (in_array('asthma',$info[$key])) {
           $excel[$key].= "{$info[$key][0]}岁{$info[$key][1]}月";
           continue;
