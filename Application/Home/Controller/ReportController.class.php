@@ -8,12 +8,12 @@ class ReportController extends CommonController {
       $openid = _I('openid');
       $city_name = _I('city_name');
       $data = array(
-        'openid'=>$openid,
+//        'openid'=>$openid,
         'city_name'=>$city_name,
       );
       // $user_info校验
       Validator::make($data, [
-        "openid" => "present",
+//        "openid" => "present",
         "city_name" => "present",
       ]);
       if (Validator::has_fails()) {
