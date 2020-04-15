@@ -15,7 +15,7 @@
 if(version_compare(PHP_VERSION,'5.3.0','<'))  die('require PHP > 5.3.0 !');
 
 // 开启调试模式 只要是开发阶段开启，设置为true 部署阶段注释或者设为false
-define('APP_DEBUG',true);
+define('APP_DEBUG',false);
 
 // 定义目录分隔符
 define('DS',DIRECTORY_SEPARATOR);
