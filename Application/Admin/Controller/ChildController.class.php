@@ -436,11 +436,12 @@ class ChildController extends CommonController
             if ($key_excel === 0) {
               continue;
             } else {
-              $excel[$key][$key_excel] .= "{$info[$key][1]}:{$info[$key][2]}:{$info[$key][3]}:{$info[$key][4]}";
+              $excel[$key][$key_excel] .= "{$info[$key][1]}:{$info[$key][2]}:{$info[$key][3]}:{$info[$key][4]}:{$info[$key][5]}";
             }
           }
           continue;
-        } else {
+        }
+        else {
           foreach ($excel[$key] as $key_excel => $excel_value) {
             foreach ($info[$key] as $k => $v) {
               if ($key_excel === (intval($v) + 1)) {
