@@ -9,6 +9,7 @@
     ],
     "require": {
         "phpoffice/phpspreadsheet": "^1.11",
-        "fangstar/php-validator": "^1.0"
+        "fangstar/php-validator": "^1.0",
+        "alibabacloud/sdk": "^1.8"
     }
 }
