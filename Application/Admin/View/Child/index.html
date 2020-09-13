@@ -3,6 +3,9 @@
 <block name="location">体质报告列表</block>
 <block name="css"></block>
 <block name="content">
+  <div id="img" style="position: fixed;width: 100%;height: 100%;background-color: rgba(0,0,0,0.3);z-index: 999;visibility: hidden;display: flex;justify-content: center;align-items: center">
+
+  </div>
   <table id="simple-table" class="table  table-bordered table-hover">
     <thead>
     <tr>
@@ -43,6 +46,9 @@
           <div class="hidden-sm hidden-xs btn-group">
             <a class="btn btn-xs btn-primary" href={:U('exportDietExcel',array('id'=>$item['id']))}>饮食导出</a>
           </div>
+          <div class="hidden-sm hidden-xs btn-group">
+            <a class="btn btn-xs btn-danger" onclick="showImage('{$item.signature}')">查看签名</a>
+          </div>
         </td>
       </tr>
     </volist>
@@ -58,15 +64,16 @@
 </block>
 <block name="js">
   <script>
-    function deleteItem(id) {
-      if (window.confirm('确定要删除吗？')) {
-        location.href = "/User/del/id/"+id;
-      }
+    const nodes = document.getElementById('img');
+    function showImage(img) {
+      nodes.innerHTML = `
+        <a class="btn btn-xs btn-danger" style="position: absolute;top: 10px;right: 50px" onclick="closeImage()">关闭</a>
+        <img src="${img}" style="width: 500px;height: 500px" alt="此报告未签名">
+        `;
+      nodes.style.visibility = 'visible';
     }
-    function exportDietExcel(id) {
-      // console.log("{:U('exportDietExcel','id="+id+"')}");
-      // location.href = "{:U('exportDietExcel','id="+id+"')}";
-      // location.href = "/Child/exportDietExcel/id/"+id;
+    function closeImage() {
+      nodes.style.visibility = 'hidden';
     }
   </script>
 </block>

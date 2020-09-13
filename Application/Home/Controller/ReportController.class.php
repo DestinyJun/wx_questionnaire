@@ -42,12 +42,11 @@ class ReportController extends CommonController {
         "openid" => "present|alpha_num",
         "nikename" => "present",
         'sex' => "in:0,1,2",
-        "tel" => "present|mobile",
+        "tel" => "present|mobile"
       ]);
       if (Validator::has_fails()) {
         $this->ajaxReturn(array("status" =>'1001',"msg"=>Validator::error_msg()));
       }
-
       // $answer校验
       Validator::make($answer, [
         "physique_type" => "present",
@@ -70,6 +69,7 @@ class ReportController extends CommonController {
         "flag" => "present|in:1,2",
         "nation" => "present",
         "address" => "present",
+        "signature" => "present",
       ]);
       if (Validator::has_fails()) {
         $this->ajaxReturn(array("status" =>'1001',"msg"=>Validator::error_msg()));
@@ -150,13 +150,21 @@ class ReportController extends CommonController {
         $this->ajaxReturn(array('status'=>'1001','msg'=>'参数错误'));
       }
       $report = M('physique_report')->alias('a')->
+      field('a.physique_type,b.is_do,b.is_diet')->
       join("left join wx_child b on a.id=b.report_id")->
-      field('a.physique_type,a.physique_type_enable,b.is_do,b.is_diet')->
       where("a.id={$report_id}")->find();
       if (!$report) {
         $this->ajaxReturn(array('status'=>'1001','msg'=>'参数错误'));
+      } else {
+        $report['physique_type'] = str_to_array($report['physique_type']);
+        $arr = [];
+        foreach ($report['physique_type'] as $value) {
+          $arr[] = ['name' =>$value[0],'value' =>$value[1]];
+        }
+        $report['physique_type'] = $arr;
+
+        $this->ajaxReturn(array('status'=>'1000','msg'=>'请求成功','data'=>$report));
       }
-      $this->ajaxReturn(array('status'=>'1000','msg'=>'请求成功','data'=>$report));
     }
 
     // 测试

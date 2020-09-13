@@ -67,66 +67,6 @@ class ChildController extends CommonController
       $info[] = explode('-', $value);
     }
     $info[] = $data['physique_type'];
-    $excel = array(
-      '联系电话：',
-      '孩子的姓名：',
-      '孩子的性别：',
-      '孩子的年龄：',
-      '孩子的身高：',
-      '孩子的体重：',
-      '孩子的民族：',
-      '近3年较为固定的生活地址：',
-      '孩子是否患哮喘：',
-      '患哮喘的年龄是：',
-      array('哮喘的治疗方案：', 'A.吸入激素治疗（如布地奈德）', 'B.口服孟鲁斯特纳', 'C.脱敏治疗', 'D.遵照医嘱规律治疗', 'E.未规律治疗'),
-      array('患过敏性疾病么?', 'A：是', 'B：否'),
-      array('有过敏性家族史?', 'A：是', 'B：否'),
-      array('您的孩子体型符合以下哪种情况？【可多选】', 'A.体型正常或结实', 'B.体型偏矮', 'C.体型偏瘦', 'D.体型偏胖'),
-      array('A.精力充沛', 'B.精力旺盛，喜动或活动多', 'C.容易劳累、没精神'),
-      array('A.肌肉紧实', 'B.肌肉松软', 'C.肚子大、软'),
-      array('A.脸色红润有光泽', 'B.脸色偏黄', 'C.脸色偏白、没有光泽', 'D.脸部油腻'),
-      array('A.颜色淡红', 'B.颜色偏淡', 'C.颜色偏红'),
-      array('A.皮肤润泽', 'B.皮肤干燥或瘙痒'),
-      array('A.头发细', 'B.头发颜色黄'),
-      array('A.舌淡红苔薄白', 'B.舌淡', 'C.舌淡胖，苔白滑', 'D.舌淡苔白', 'E.舌红', 'F.舌红苔黄', 'G.舌红苔黄腻', 'H.地图舌或者舌苔少', 'I.舌胖大，苔腻'),
-      array('A.下眼睑浮肿', 'B.起床眼屎多', 'C.揉鼻子、揉眼睛或眨眼'),
-      array('A.喜欢喝水（不包括饮料）', 'B.不喜欢喝水'),
-      array('A.怕冷', 'B.怕热'),
-      array('A.活动后汗多', 'B.睡觉出汗多', 'C.出汗黏'),
-      array('A.饮食均衡、不挑食', 'B.饭量小', 'C.吃肉食偏多', 'D.吃凉的食物会不舒服'),
-      array('A.入睡快，睡眠比较安稳', 'B.睡眠时间充足的情况下，白天也会打哈欠、犯困', 'C.上床后需要较长时间才能入睡', 'D.夜卧睡眠不踏实，来回翻滚', 'E. 睡觉时眼睛微张（有缝隙）'),
-      array('A.大便不干不稀，能定时排便每日1~2次', 'B.大便干燥（例如球状、粗条状）', 'C.大便量多、不成形', 'D.大便粘便盆，不易冲刷干净', 'E.大便味臭', 'F.正常饮水量情况下，仍小便黄（6~12岁儿童每天正常饮水量【包括奶类、水果、蔬菜等中的水分】：1500~2000ml，约3~4个矿泉水瓶）', 'G.小便次数多或量多（6~12岁儿童小便正常量600~1400ml/天，小便正常次数4~7次/天）'),
-      array('A.身体健康、很少生病', 'B.患病后很快康复', 'C.起口疮、咽痛', 'D.流鼻血（外伤导致除外）', 'E说话声音小', 'F.口气重', 'G.手脚心热', 'H.手脚凉', 'I.肚子痛', 'J.干呕', 'K.头晕', 'L.心慌', 'M.尿床', 'N.觉得嗓子有痰', 'O.身上起湿疹', 'P.皮肤搔抓后有隆起刮痕', 'Q.在以下情况下出现打喷嚏、流鼻涕、鼻塞、咳嗽【换季、温度变化、接触花粉或带毛的小动物、装修等可能存在过敏原的地方】', 'R.接触或食用某过敏原后易起荨麻疹或皮肤痒', 'S.不喜欢潮湿的环境或在潮湿环境下身体有不适表现（如起皮疹、胸闷、哮喘发作等）'),
-      array('患呼吸道感染（如感冒、支气管炎、肺炎）的频率', 'A.吸入激素治疗（如布地奈德）', 'B.口服孟鲁斯特纳', 'C.脱敏治疗'),
-      array('您的孩子尿床的频率？', 'A.几乎每天都有', 'B.1～4次/每周', 'C.1～4次/每月', 'D.数月一次', 'E.3岁以后几乎不尿床'),
-      array('A.喜欢安静、不喜运动', 'B.性格开朗、爱笑', 'C.闷闷不乐、唉声叹气', 'D.胆子小，不喜欢冒险', 'E.脾气急躁', 'F.性格温和，脾气好，不易起急', 'G.遇事易紧张', 'H.敏感，在乎别人的说法及做法', 'I.在搬家或换学校后能较快适应环境（包括日常生活、健康状态、心理状态等）'),
-      '各个体质得分：',
-      '最终输出结果：'
-    );
-    /*foreach ($excel as $key=>$value) {
-      if (is_array($info[$key])) {
-        if (in_array('asthma',$info[$key])) {
-          $excel[$key].= "{$info[$key][0]}岁{$info[$key][1]}月";
-          continue;
-        };
-        if (in_array('flag',$info[$key])) {
-          foreach ($excel[$key] as $key_excel=>$excel_value) {
-            $excel[$key][$key_excel] .= "————>{$info[$key][$key_excel]}";
-          }
-        }
-        else {
-          foreach ($excel[$key] as $key_excel=>$excel_value) {
-            foreach ($info[$key] as $k=>$v) {
-              if ($key_excel === (intval($v)+1)) {
-                $excel[$key][$key_excel].='  ✔';
-              }
-            }
-          }
-        };
-      } else {
-        $excel[$key].= $info[$key];
-      }
-    }*/
     foreach ($info as $key => $value) {
       if (is_array($info[$key])) {
         if (in_array('asthma', $info[$key])) {
@@ -139,45 +79,6 @@ class ChildController extends CommonController
       }
     }
     // 体质答案跟题目匹配
-    /* $info_answer = [];
-     foreach ($excel as $key => $value) {
-       if (is_array($info[$key])) {
-         if (in_array('asthma', $info[$key])) {
-           $info_answer[] = "{$info[$key][0]}岁{$info[$key][1]}月";
-           continue;
-         };
-         if (in_array('flag', $info[$key])) {
-           foreach ($excel[$key] as $key_excel => $excel_value) {
-             $info_answer[] = "{$info[$key][$key_excel]}";
-           }
-         }
-         else {
-           $arr = [];
-           foreach ($excel[$key] as $key_excel => $excel_value) {
-             $flag = false;
-             if ($key_excel === 0 ) {
-               $arr[] = '空';
-               continue;
-             }
-             foreach ($info[$key] as $k=>$v) {
-               if ($key_excel === (intval($v)+1)) {
-                 $arr[] ='选中';
-                 $flag = false;
-                 break;
-               }else {
-                 $flag = true;
-               }
-             }
-             if ($flag) {
-               $arr[] = '空';
-             }
-           }
-           $info_answer[] = $arr;
-         };
-       } else {
-         $info_answer[] = $info[$key];
-       }
-     }*/
     $name = "{$data['name']}-体质报告";
     // 数据写入表格
     $spreadsheet = new Spreadsheet();

@@ -5,7 +5,7 @@ use Think\Page;
 class ChildModel extends CommonModel
 {
   // 字段静态化
-  protected $fields = array('id','user_id','report_id','ptel','name','sex','age','height','weight','flag','nation','address','family','answer','addtime','is_do','is_diet');
+  protected $fields = array('id','user_id','report_id','ptel','name','sex','age','height','weight','flag','nation','address','signature','family','answer','addtime','is_do','is_diet');
 
   protected $_auto = array(
     array('addtime','time',1,'function')
@@ -32,9 +32,10 @@ class ChildModel extends CommonModel
     // 添加报告
     $reportModel = M('physique_report');
     $answer['addtime'] = time();
+    $answer['physique_type'] = array_to_str( $answer['physique_type']);
     $answer['physique_asthma_list'] = array_to_str( $answer['physique_asthma_list']);
     $answer['physique_result_list'] = array_to_str( $answer['physique_result_list']);
-    $answer['physique_answer_list'] = array_to_str( $answer['physique_answer_list']);
+    $answer['physique_answer_list'] = array_to_str( $answer['physique_answer_list']);;
     $report_res = $reportModel->add($answer);
     if (!$report_res) {
       $this->rollback();
