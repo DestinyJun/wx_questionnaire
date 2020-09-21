@@ -39,7 +39,7 @@ class ReportController extends CommonController {
       $child = _I('child');
       // $user_info校验
       Validator::make($user_info, [
-        "openid" => "present|alpha_num",
+        "openid" => "present",
         "nikename" => "present",
         'sex' => "in:0,1,2",
         "tel" => "present|mobile"
