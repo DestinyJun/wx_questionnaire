@@ -16,52 +16,6 @@ class ChildModel extends CommonModel
   // 添加孩子
   public function addRepotr($user_info, $answer, $child)
   {
-    $answerArr = $answer['physique_result_list'];
-    foreach ($answerArr as $key => $value) {
-      $pArr[] = $value[1];
-    };
-    // 1是第一种情况，2是第二种情况，3是第三种情况
-    // 第一种情况：只要有一个体质>=40
-    foreach ($pArr as $key => $value) {
-      if ($answerArr[$key][0] !== '平和质') {
-        if ($value >= 40) {
-          $pJust = 1;
-          break;
-        }
-      } else {
-        if ($value >= 60) {
-          $pJust = 2;
-        }
-        if ($value < 60) {
-          $pJust = 3;
-        }
-      }
-    }
-    // 找出对应条件的分数
-    foreach ($pArr as $key => $value) {
-      if ($answerArr[$key][0] !== '平和质') {
-        $pointArr[] = $value;
-      }
-    }
-    switch ($pJust) {
-      case 1:
-        foreach ($pointArr as $key=>$value) {
-          if ($value >= 40) {
-            $pointFour[] = $value;
-            $pointFourKey[] = $key;
-          }
-          if ($value >= 34 && $value < 40){
-            $pointCenter[] = $value;
-            $pointCenterKey[] = $key;
-          }
-        }
-        if(count($pointFourKey) == 1) {
-          $pAnswerArr[] = $answerArr[$pointFourKey];
-        }
-        break;
-    }
-    var_dump($pointCenter);
-    die();
     $this->startTrans();
     // 登记用户
     $userModel = D('Admin/User');
