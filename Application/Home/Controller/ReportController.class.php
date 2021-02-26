@@ -82,14 +82,12 @@ class ReportController extends CommonController {
       if (intval($child['flag'])==2 && intval(substr($child['age'],0,strrpos($child['age'],'岁')))<6) {
         $this->ajaxReturn(array("status" =>'1006',"msg"=>'年龄段参数不符合要求！'));
       }
-//      dump(array_to_str($answer['physique_asthma_list']));exit();
-//      $this->ajaxReturn(array("status" =>'1000',"msg"=>'提交成功！',"data"=>implode('-',$answer['physique_result_list'])));
       $model = D('Admin/Child');
       $res = $model->addRepotr($user_info, $answer, $child);
       if (!$res) {
         $this->ajaxReturn(array("status" =>'1004',"msg"=>$model->getError()));
       }
-      $this->ajaxReturn(array("status" =>'1000',"msg"=>'提交成功！',"data"=>array("child_id"=>$res)));
+      $this->ajaxReturn(array("status" =>'1000',"msg"=>'提交成功！',"data"=>$res));
     }
 
     // 添加饮食问卷调查
@@ -166,11 +164,4 @@ class ReportController extends CommonController {
         $this->ajaxReturn(array('status'=>'1000','msg'=>'请求成功','data'=>$report));
       }
     }
-
-    // 测试
-    public function test() {
-      $answer = _I('answer');
-      $this->ajaxReturn(array('status'=>'1000','msg'=>'提交成功！','data'=> $answer));
-    }
-
 }

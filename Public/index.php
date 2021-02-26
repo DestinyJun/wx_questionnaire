@@ -24,15 +24,15 @@ define('DS',DIRECTORY_SEPARATOR);
 define('PROJECT_ROOT',str_replace('/','\\',$_SERVER['DOCUMENT_ROOT']).DS);
 
 // 定义应用存储目录
-define('APP_PATH','./Application'.DS);
+define('APP_PATH','../Application'.DS);
 
 // 设置应用编码
 header('content-type:text/html;charset=utf-8');
 
 // Composer自动加载
-require './vendor/autoload.php';
+require '../vendor/autoload.php';
 
 // 引入ThinkPHP入口文件
-require './ThinkPHP/ThinkPHP.php';
+require '../ThinkPHP/ThinkPHP.php';
 
 // 亲^_^ 后面不需要任何代码了 就是如此简单

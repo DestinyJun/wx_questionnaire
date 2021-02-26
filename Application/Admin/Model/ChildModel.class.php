@@ -17,51 +17,92 @@ class ChildModel extends CommonModel
   public function addRepotr($user_info, $answer, $child)
   {
     $answerArr = $answer['physique_result_list'];
-    foreach ($answerArr as $key => $value) {
-      $pArr[] = $value[1];
-    };
-    // 1是第一种情况，2是第二种情况，3是第三种情况
-    // 第一种情况：只要有一个体质>=40
-    foreach ($pArr as $key => $value) {
-      if ($answerArr[$key][0] !== '平和质') {
+    // 先排序
+    for($i=0, $len=count($answerArr)-1; $i<$len; ++$i)
+    {
+      for($j=$len; $j>$i; --$j)
+      {
+        if($answerArr[$j][1] < $answerArr[$j-1][1])
+        {
+          $temp = $answerArr[$j];
+          $answerArr[$j] = $answerArr[$j-1];
+          $answerArr[$j-1] = $temp;
+        }
+      }
+    }
+    $answerArr = array_reverse($answerArr);
+    // 3-7岁
+    if ($child['flag'] == 1) {
+      // 找出平和质
+      foreach ($answerArr as $key => $value) {
+        if($value[0] === '平和质') {
+          $answerIndex = $key;
+        }
+      };
+      // 从数组中剔除平和质
+      foreach ($answerArr as $key => $value) {
+        if ($answerArr[$key][0] == '平和质') {
+          continue;
+        }
+        $lessAnswer[] = $value;
+      };
+      // 拿到出平和质外的所有体质分数
+      foreach ($lessAnswer as $key => $value) {
+        $pArr[] = $value[1];
+      };
+      // 0什么都不是，1是第一种情况，2是第二种情况，3是第三种情况
+      $pJust = 0;
+      // 判断第一种情况：只要有一个体质>=40
+      foreach ($pArr as $key => $value) {
         if ($value >= 40) {
           $pJust = 1;
           break;
         }
-      } else {
-        if ($value >= 60) {
-          $pJust = 2;
-        }
-        if ($value < 60) {
-          $pJust = 3;
+      };
+      // 判断第二种情况
+      if ($pArr[0] < 40 && $answerArr[$answerIndex][1] >=60) {
+        $pJust = 2;
+      }
+      // 判断第三种情况
+      if ($pArr[0] < 40 && $answerArr[$answerIndex][1] < 60) {
+        $pJust = 3;
+      }
+      // 输出第一种体质
+      if ($pJust === 1) {
+        // 第一种情况：只有一种体质>=40分，只有一个体质在30-40之间
+        foreach ($pArr as $key => $value) {
+          if ($value<34) {
+            $pJustIndex = $key;
+            break;
+          }
+        };
+        if ($pJustIndex<3) {
+          $physiqueArr = [$lessAnswer[0],['倾向', 0],$lessAnswer[1]];
+        } else {
+          // 第二种情况：有多个体质在34-40之间或者大于40
+          $physiqueArr = [$lessAnswer[0],$lessAnswer[1],$lessAnswer[2]];
         }
       }
-    }
-    // 找出对应条件的分数
-    foreach ($pArr as $key => $value) {
-      if ($answerArr[$key][0] !== '平和质') {
-        $pointArr[] = $value;
+      // 输出第二种体质
+      if ($pJust === 2) {
+        // 第一种情况：除平和质外其他体质都<34
+        if ( $pArr[0] < 34) {
+          $physiqueArr = [$answerArr[$answerIndex]];
+        } else {
+          // 第二种情况：有多个体质在34-40之间
+          $physiqueArr = [$answerArr[$answerIndex],['倾向', 0],$lessAnswer[0],$lessAnswer[1]];
+        }
+      }
+      //输出第三种体质
+      if ($pJust === 3) {
+        $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0],$lessAnswer[1]];
       }
     }
-    switch ($pJust) {
-      case 1:
-        foreach ($pointArr as $key=>$value) {
-          if ($value >= 40) {
-            $pointFour[] = $value;
-            $pointFourKey[] = $key;
-          }
-          if ($value >= 34 && $value < 40){
-            $pointCenter[] = $value;
-            $pointCenterKey[] = $key;
-          }
-        }
-        if(count($pointFourKey) == 1) {
-          $pAnswerArr[] = $answerArr[$pointFourKey];
-        }
-        break;
+    // 7-14岁
+    else {
+      $physiqueArr = [$answerArr[0],$answerArr[1],$answerArr[2]];
     }
-    var_dump($pointCenter);
-    die();
+    // 数据库操作
     $this->startTrans();
     // 登记用户
     $userModel = D('Admin/User');
@@ -80,7 +121,7 @@ class ChildModel extends CommonModel
     // 添加报告
     $reportModel = M('physique_report');
     $answer['addtime'] = time();
-    $answer['physique_type'] = array_to_str($answer['physique_type']);
+    $answer['physique_type'] = array_to_str($physiqueArr);
     $answer['physique_asthma_list'] = array_to_str($answer['physique_asthma_list']);
     $answer['physique_result_list'] = array_to_str($answer['physique_result_list']);
     $answer['physique_answer_list'] = array_to_str($answer['physique_answer_list']);
@@ -104,7 +145,10 @@ class ChildModel extends CommonModel
       return false;
     }
     $this->commit();
-    return $child_res;
+    foreach ($physiqueArr as $value) {
+      $result_res[] = array('name' => $value[0],'value'=>$value[1]);
+    };
+    return array('child_id'=>$child_res,'physique_type'=>$result_res);
   }
 
   // 查询孩子体质报告列表

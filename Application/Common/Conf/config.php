@@ -3,7 +3,7 @@ return array(
   /*** 说明：'配置项'=>'配置值' ***/
 	// 配置模板替换
  'TMPL_PARSE_STRING' => array(
-   '__PUBLIC_ADMIN__' => '/Public/Admin'  // 后台静态资源目录
+   '__PUBLIC_ADMIN__' => '/Admin'  // 后台静态资源目录
  ),
   // 配置url访问模式
   'URL_MODEL' => 2,  // URL访问模式,可选参数0、1、2、3,代表以下四种模式：
