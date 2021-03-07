@@ -49,7 +49,7 @@ class ReportController extends CommonController {
       }
       // $answer校验
       Validator::make($answer, [
-        "physique_type" => "present",
+//        "physique_type" => "present",
         "physique_asthma" => "in:0,1",
         "physique_result_list" => "present",
         "physique_answer_list" => "present",
@@ -74,12 +74,12 @@ class ReportController extends CommonController {
       if (Validator::has_fails()) {
         $this->ajaxReturn(array("status" =>'1001',"msg"=>Validator::error_msg()));
       }
-      // 6-12岁
-      if (intval($child['flag'])==1 && intval(substr($child['age'],0,strrpos($child['age'],'岁')))>=6) {
+      // 7-14岁
+      if (intval($child['flag'])==1 && intval(substr($child['age'],0,strrpos($child['age'],'岁')))>=7) {
         $this->ajaxReturn(array("status" =>'1006',"msg"=>'年龄段参数不符合要求！'));
       }
       // 3-6岁
-      if (intval($child['flag'])==2 && intval(substr($child['age'],0,strrpos($child['age'],'岁')))<6) {
+      if (intval($child['flag'])==2 && intval(substr($child['age'],0,strrpos($child['age'],'岁')))<7) {
         $this->ajaxReturn(array("status" =>'1006',"msg"=>'年龄段参数不符合要求！'));
       }
       $model = D('Admin/Child');
