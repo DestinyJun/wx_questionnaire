@@ -46,7 +46,7 @@ class ChildModel extends CommonModel
         }
         $lessAnswer[] = $value;
       };
-      // 拿到出平和质外的所有体质分数
+      // 拿到除平和质外的所有体质分数
       foreach ($lessAnswer as $key => $value) {
         $pArr[] = $value[1];
       };
@@ -100,7 +100,70 @@ class ChildModel extends CommonModel
     }
     // 7-14岁
     else {
-      $physiqueArr = [$answerArr[0],$answerArr[1],$answerArr[2]];
+      // 找出平和质
+      foreach ($answerArr as $key => $value) {
+        if($value[0] === '平和质') {
+          $answerIndex = $key;
+        }
+      };
+      // 从数组中剔除平和质
+      foreach ($answerArr as $key => $value) {
+        if ($answerArr[$key][0] == '平和质') {
+          continue;
+        }
+        $lessAnswer[] = $value;
+      };
+      // 拿到除平和质外的所有体质分数
+      foreach ($lessAnswer as $key => $value) {
+        $pArr[] = $value[1];
+      };
+      // 0什么都不是，1是第一种情况，2是第二种情况，3是第三种情况
+      $pJust = 0;
+
+      // 判断第一种情况：只要有一个体质>=44
+      foreach ($pArr as $key => $value) {
+        if ($value >= 44) {
+          $pJust = 1;
+          break;
+        }
+      };
+      // 判断第二种情况
+      if ($pArr[0] < 44 && $answerArr[$answerIndex][1] >=53) {
+        $pJust = 2;
+      }
+      // 判断第三种情况
+      if ($pArr[0] < 44 && $answerArr[$answerIndex][1] < 53) {
+        $pJust = 3;
+      }
+
+      // 输出第一种体质
+      if ($pJust === 1) {
+        // 第一种情况：有多个他体质大于38分
+        if ( $pArr[2] >= 38) {
+          $physiqueArr = [$lessAnswer[0],['倾向', 0],$lessAnswer[1],$lessAnswer[2]];
+        }
+        // 第二种情况，只有一种他体质大于等于38
+         else if ( $pArr[0] >= 44 && $pArr[1]>=38 && $pArr[1] < 44) {
+          $physiqueArr = [$lessAnswer[0],['倾向', 0],$lessAnswer[1]];
+        }
+      }
+      // 输出第二种体质
+      if ($pJust === 2) {
+        // 第一种情况：除平和质外其他体质都<38
+        if ( $pArr[0] < 38) {
+          $physiqueArr = [$answerArr[$answerIndex]];
+        } else if ( $pArr[1] >= 38) {
+          // 第二种情况：有一个人体质大于等38
+          $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0],$lessAnswer[1]];
+        } else if ( $pArr[0] >= 38) {
+          // 第二种情况：有一个人体质大于等38
+          $physiqueArr = [$answerArr[$answerIndex],['倾向', 0],$lessAnswer[0]];
+        }
+      }
+      //输出第三种体质
+      if ($pJust === 3) {
+        $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0],$lessAnswer[1]];
+      }
     }
     // 数据库操作
     $this->startTrans();
