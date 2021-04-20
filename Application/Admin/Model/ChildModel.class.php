@@ -67,19 +67,25 @@ class ChildModel extends CommonModel
       if ($pArr[0] < 40 && $answerArr[$answerIndex][1] < 60) {
         $pJust = 3;
       }
+
       // 输出第一种体质
       if ($pJust === 1) {
-        // 第一种情况：只有一种体质>=40分，只有一个体质在30-40之间
+        // 找出最后一个大于等于34的索引
+        $pindex = 0;
         foreach ($pArr as $key => $value) {
-          if ($value<34) {
-            $pJustIndex = $key;
+          if ($value < 34) {
+            $pindex = $key;
             break;
           }
         };
-        if ($pJustIndex<3) {
-          $physiqueArr = [$lessAnswer[0],['倾向', 0],$lessAnswer[1]];
-        } else {
-          // 第二种情况：有多个体质在34-40之间或者大于40
+        $pindex = $pindex - 1;
+        if ($pindex === 0) {
+          $physiqueArr = [$lessAnswer[0]];
+        }
+        if ($pindex === 1) {
+          $physiqueArr = [$lessAnswer[0],$lessAnswer[1]];
+        }
+        if ($pindex>=2) {
           $physiqueArr = [$lessAnswer[0],$lessAnswer[1],$lessAnswer[2]];
         }
       }
@@ -88,9 +94,23 @@ class ChildModel extends CommonModel
         // 第一种情况：除平和质外其他体质都<34
         if ( $pArr[0] < 34) {
           $physiqueArr = [$answerArr[$answerIndex]];
-        } else {
-          // 第二种情况：有多个体质在34-40之间
-          $physiqueArr = [$answerArr[$answerIndex],['倾向', 0],$lessAnswer[0],$lessAnswer[1]];
+        }
+        else {
+          // 找出最后一个大于等于34的索引
+          $pindex = 0;
+          foreach ($pArr as $key => $value) {
+            if ($value < 34) {
+              $pindex = $key;
+              break;
+            }
+          };
+          $pindex = $pindex - 1;
+          if ($pindex === 0) {
+            $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0]];
+          }
+          if ($pindex >= 1) {
+            $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0],$lessAnswer[1]];
+          }
         }
       }
       //输出第三种体质
@@ -138,26 +158,46 @@ class ChildModel extends CommonModel
 
       // 输出第一种体质
       if ($pJust === 1) {
-        // 第一种情况：有多个他体质大于38分
-        if ( $pArr[2] >= 38) {
-          $physiqueArr = [$lessAnswer[0],['倾向', 0],$lessAnswer[1],$lessAnswer[2]];
+        // 找出最后一个大于等于38的索引
+        $pindex = 0;
+        foreach ($pArr as $key => $value) {
+          if ($value < 38) {
+            $pindex = $key;
+            break;
+          }
+        };
+        $pindex = $pindex - 1;
+        if ($pindex === 0) {
+          $physiqueArr = [$lessAnswer[0]];
         }
-        // 第二种情况，只有一种他体质大于等于38
-         else if ( $pArr[0] >= 44 && $pArr[1]>=38 && $pArr[1] < 44) {
-          $physiqueArr = [$lessAnswer[0],['倾向', 0],$lessAnswer[1]];
+        if ($pindex === 1) {
+          $physiqueArr = [$lessAnswer[0],$lessAnswer[1]];
+        }
+        if ($pindex>=2) {
+          $physiqueArr = [$lessAnswer[0],$lessAnswer[1],$lessAnswer[2]];
         }
       }
       // 输出第二种体质
       if ($pJust === 2) {
-        // 第一种情况：除平和质外其他体质都<38
         if ( $pArr[0] < 38) {
           $physiqueArr = [$answerArr[$answerIndex]];
-        } else if ( $pArr[1] >= 38) {
-          // 第二种情况：有一个人体质大于等38
-          $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0],$lessAnswer[1]];
-        } else if ( $pArr[0] >= 38) {
-          // 第二种情况：有一个人体质大于等38
-          $physiqueArr = [$answerArr[$answerIndex],['倾向', 0],$lessAnswer[0]];
+        }
+        else {
+          // 找出最后一个大于等于38的索引
+          $pindex = 0;
+          foreach ($pArr as $key => $value) {
+            if ($value < 38) {
+              $pindex = $key;
+              break;
+            }
+          };
+          $pindex = $pindex - 1;
+          if ($pindex === 0) {
+            $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0]];
+          }
+          if ($pindex >= 1) {
+            $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0],$lessAnswer[1]];
+          }
         }
       }
       //输出第三种体质
