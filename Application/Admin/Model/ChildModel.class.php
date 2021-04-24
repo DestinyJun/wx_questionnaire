@@ -70,47 +70,22 @@ class ChildModel extends CommonModel
 
       // 输出第一种体质
       if ($pJust === 1) {
-        // 找出最后一个大于等于34的索引
-        $pindex = 0;
-        foreach ($pArr as $key => $value) {
-          if ($value < 34) {
-            $pindex = $key;
-            break;
-          }
-        };
-        $pindex = $pindex - 1;
-        if ($pindex === 0) {
-          $physiqueArr = [$lessAnswer[0]];
-        }
-        if ($pindex === 1) {
-          $physiqueArr = [$lessAnswer[0],$lessAnswer[1]];
-        }
-        if ($pindex>=2) {
+        if ($pArr[2] >= 34) {
           $physiqueArr = [$lessAnswer[0],$lessAnswer[1],$lessAnswer[2]];
+        } else if ($pArr[1] >= 34) {
+          $physiqueArr = [$lessAnswer[0],$lessAnswer[1]];
+        } else {
+          $physiqueArr = [$lessAnswer[0]];
         }
       }
       // 输出第二种体质
       if ($pJust === 2) {
-        // 第一种情况：除平和质外其他体质都<34
         if ( $pArr[0] < 34) {
           $physiqueArr = [$answerArr[$answerIndex]];
-        }
-        else {
-          // 找出最后一个大于等于34的索引
-          $pindex = 0;
-          foreach ($pArr as $key => $value) {
-            if ($value < 34) {
-              $pindex = $key;
-              break;
-            }
-          };
-          $pindex = $pindex - 1;
-          if ($pindex === 0) {
-            $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0]];
-          }
-          if ($pindex >= 1) {
-            $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0],$lessAnswer[1]];
-          }
+        } else if ($pArr[1] >= 34) {
+          $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0],$lessAnswer[1]];
+        } else  {
+          $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0]];
         }
       }
       //输出第三种体质
@@ -158,46 +133,22 @@ class ChildModel extends CommonModel
 
       // 输出第一种体质
       if ($pJust === 1) {
-        // 找出最后一个大于等于38的索引
-        $pindex = 0;
-        foreach ($pArr as $key => $value) {
-          if ($value < 38) {
-            $pindex = $key;
-            break;
-          }
-        };
-        $pindex = $pindex - 1;
-        if ($pindex === 0) {
-          $physiqueArr = [$lessAnswer[0]];
-        }
-        if ($pindex === 1) {
-          $physiqueArr = [$lessAnswer[0],$lessAnswer[1]];
-        }
-        if ($pindex>=2) {
+        if ($pArr[2] >= 38) {
           $physiqueArr = [$lessAnswer[0],$lessAnswer[1],$lessAnswer[2]];
+        } else if ($pArr[1] >= 38) {
+          $physiqueArr = [$lessAnswer[0],$lessAnswer[1]];
+        } else {
+          $physiqueArr = [$lessAnswer[0]];
         }
       }
       // 输出第二种体质
       if ($pJust === 2) {
         if ( $pArr[0] < 38) {
           $physiqueArr = [$answerArr[$answerIndex]];
-        }
-        else {
-          // 找出最后一个大于等于38的索引
-          $pindex = 0;
-          foreach ($pArr as $key => $value) {
-            if ($value < 38) {
-              $pindex = $key;
-              break;
-            }
-          };
-          $pindex = $pindex - 1;
-          if ($pindex === 0) {
-            $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0]];
-          }
-          if ($pindex >= 1) {
-            $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0],$lessAnswer[1]];
-          }
+        } else if ($pArr[1] >= 38) {
+          $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0],$lessAnswer[1]];
+        } else  {
+          $physiqueArr = [$answerArr[$answerIndex],$lessAnswer[0]];
         }
       }
       //输出第三种体质
